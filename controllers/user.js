@@ -4,25 +4,6 @@ import { sendCookie } from "../utils/features.js";
 
 import ErrorHandler from "../middlewares/error.js";
 
-export const register = async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-
-    let user = await User.findOne({ email });
-    //Checking is user is already registered
-    if (user) {
-      return next(new ErrorHandler("User already exist", 404));
-    }
-    //for passwoed hashing
-    const hashedPassword = await bcrypt.hash(password, 10);
-    // to save on database and stord in user
-    user = await User.create({ name, email, password: hashedPassword });
-
-    sendCookie(user, res, "Registered successfully", 201);
-  } catch (error) {
-    next(error);
-  }
-};
 
 export const login = async (req, res, next) => {
   try {
@@ -48,6 +29,24 @@ export const login = async (req, res, next) => {
   }
 };
 
+
+export const register = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    let user = await User.findOne({ email });
+
+    if (user) return next(new ErrorHandler("User Already Exist", 400));
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    user = await User.create({ name, email, password: hashedPassword });
+
+    sendCookie(user, res, "Registered Successfully", 201);
+  } catch (error) {
+    next(error);
+  }
+};
 export const getMyProfile = (req, res) => {
   res.status(200).json({
     success: true,
