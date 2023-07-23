@@ -4,7 +4,7 @@ import { sendCookie } from "../utils/features.js";
 
 import ErrorHandler from "../middlewares/error.js";
 
-export const register = async (req, res,next) => {
+export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
