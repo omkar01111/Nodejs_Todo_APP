@@ -11,13 +11,7 @@ config({ path: "./data/config.env" });
 
 //using midelewares
 app.use(express.json());
-
 app.use(cookieParser());
-//using route
-app.use("/api/v1/users", userRouter);
-app.use("/api/v1/task", taskRouter);
-app.use(errorMidelware);
-
 app.use(
   cors({
     origin: [process.env.FRONTEND_URL],
@@ -25,6 +19,15 @@ app.use(
     credentials: true,
   })
 );
+
+//using route
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/task", taskRouter);
+
+
 app.get("/", (req, res) => {
   res.send("Welcome");
 });
+
+// using Error middleware
+app.use(errorMidelware);
